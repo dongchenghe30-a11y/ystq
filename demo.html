@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabManager Demo - Browser Tab Management API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2d3436;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tabs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tab-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .tab-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tab-card.active {
+            border: 3px solid #667eea;
+        }
+
+        .tab-card.pinned::after {
+            content: '📌';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tab-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .tab-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        .tab-url {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .tab-meta {
+            font-size: 0.8rem;
+            color: #adb5bd;
+            margin-bottom: 15px;
+        }
+
+        .tab-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .event-log {
+            background: #2d3436;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .event-log h3 {
+            color: #00ff00;
+            margin-bottom: 15px;
+        }
+
+        .event-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-time {
+            color: #888;
+            margin-right: 10px;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔖 TabManager Demo</h1>
+            <p class="subtitle">Browser Tab Management API - Create, manage, and control browser tabs</p>
+        </header>
+
+        <div class="content">
+            <!-- Create Tab Section -->
+            <div class="section">
+                <h2>📝 Create New Tab</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tab Title *</label>
+                        <input type="text" id="tabTitle" placeholder="Enter tab title" value="Google">
+                    </div>
+                    <div class="form-group">
+                        <label>Tab URL *</label>
+                        <input type="text" id="tabUrl" placeholder="https://example.com" value="https://www.google.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Icon URL (optional)</label>
+                        <input type="text" id="tabIcon" placeholder="https://example.com/icon.png">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="tabActive" checked> Activate Tab
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="tabBackground"> Open in Background
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="createNewTab()">Create Tab</button>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="section">
+                <h2>📊 Statistics</h2>
+                <div class="statistics">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total Tabs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statActive">0</div>
+                        <div class="stat-label">Active Tabs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statPinned">0</div>
+                        <div class="stat-label">Pinned Tabs</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section">
+                <h2>⚡ Quick Actions</h2>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="createMultipleTabs()">Create 3 Sample Tabs</button>
+                    <button class="btn btn-secondary" onclick="exportTabs()">Export Tabs</button>
+                    <button class="btn btn-secondary" onclick="clearAllTabs()">Clear All Tabs</button>
+                </div>
+            </div>
+
+            <!-- Tabs List -->
+            <div class="section">
+                <h2>🗂️ Active Tabs</h2>
+                <div class="tabs-container" id="tabsList">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                        </svg>
+                        <p>No tabs created yet. Create your first tab above!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Log -->
+            <div class="section">
+                <h2>📋 Event Log</h2>
+                <div class="event-log">
+                    <h3>Real-time Events</h3>
+                    <div id="eventLog">
+                        <div class="event-item">
+                            <span class="event-time">[Ready]</span>
+                            <span>TabManager initialized. Waiting for events...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Usage Examples -->
+            <div class="section">
+                <h2>💡 API Usage Examples</h2>
+                <div class="code-block">
+<pre>// Initialize TabManager
+const tabManager = new TabManager();
+
+// Create a new tab
+const tab = await tabManager.createTab({
+    title: 'Google',
+    url: 'https://www.google.com',
+    icon: 'https://www.google.com/favicon.ico',
+    active: true
+});
+
+// Update tab
+await tabManager.updateTab(tab.id, {
+    title: 'Updated Title',
+    url: 'https://example.com'
+});
+
+// Activate a tab
+await tabManager.activateTab(tab.id);
+
+// Close a tab
+await tabManager.closeTab(tab.id);
+
+// Get all tabs
+const allTabs = tabManager.getAllTabs();
+
+// Get filtered tabs
+const filtered = tabManager.getFilteredTabs({
+    title: 'Google',
+    active: true
+});
+
+// Pin/Unpin tab
+tabManager.pinTab(tab.id);
+tabManager.unpinTab(tab.id);
+
+// Export/Import tabs
+const data = tabManager.exportTabs();
+tabManager.importTabs(data);
+
+// Listen to events
+tabManager.on('tabCreated', (tab) => {
+    console.log('Tab created:', tab);
+});
+
+tabManager.on('tabClosed', (tab) => {
+    console.log('Tab closed:', tab);
+});</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="TabManager.js"></script>
+    <script>
+        // Initialize TabManager
+        const tabManager = new TabManager();
+
+        // Setup event listeners
+        tabManager.on('tabCreated', (tab) => {
+            logEvent('Tab Created', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+            updateStatistics();
+        });
+
+        tabManager.on('tabClosed', (tab) => {
+            logEvent('Tab Closed', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+            updateStatistics();
+        });
+
+        tabManager.on('tabUpdated', (tab) => {
+            logEvent('Tab Updated', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+        });
+
+        tabManager.on('tabActivated', (tab) => {
+            logEvent('Tab Activated', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+        });
+
+        tabManager.on('tabPinned', (tab) => {
+            logEvent('Tab Pinned', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+        });
+
+        tabManager.on('tabUnpinned', (tab) => {
+            logEvent('Tab Unpinned', `ID: ${tab.id}, Title: ${tab.title}`);
+            renderTabs();
+        });
+
+        // Create new tab function
+        async function createNewTab() {
+            const title = document.getElementById('tabTitle').value;
+            const url = document.getElementById('tabUrl').value;
+            const icon = document.getElementById('tabIcon').value;
+            const active = document.getElementById('tabActive').checked;
+            const background = document.getElementById('tabBackground').checked;
+
+            try {
+                await tabManager.createTab({
+                    title,
+                    url,
+                    icon: icon || undefined,
+                    active,
+                    background
+                });
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        // Create multiple sample tabs
+        async function createMultipleTabs() {
+            const sampleTabs = [
+                { title: 'Google', url: 'https://www.google.com' },
+                { title: 'GitHub', url: 'https://github.com' },
+                { title: 'Stack Overflow', url: 'https://stackoverflow.com' }
+            ];
+
+            for (const tab of sampleTabs) {
+                try {
+                    await tabManager.createTab(tab);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    logEvent('Error', error.message);
+                }
+            }
+        }
+
+        // Render tabs
+        function renderTabs() {
+            const container = document.getElementById('tabsList');
+            const tabs = tabManager.getAllTabs();
+
+            if (tabs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                        </svg>
+                        <p>No tabs created yet. Create your first tab above!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tabs.map(tab => `
+                <div class="tab-card ${tab.active ? 'active' : ''} ${tab.pinned ? 'pinned' : ''}">
+                    <div class="tab-icon">📄</div>
+                    <div class="tab-title">${escapeHtml(tab.title)}</div>
+                    <div class="tab-url">${escapeHtml(tab.url)}</div>
+                    <div class="tab-meta">
+                        Created: ${new Date(tab.createdAt).toLocaleString()}<br>
+                        ID: ${tab.id.substring(0, 20)}...
+                    </div>
+                    <div class="tab-actions">
+                        <button class="btn btn-primary" onclick="activateTab('${tab.id}')">Activate</button>
+                        <button class="btn btn-secondary" onclick="duplicateTab('${tab.id}')">Duplicate</button>
+                        <button class="btn btn-secondary" onclick="${tab.pinned ? `unpinTab('${tab.id}')` : `pinTab('${tab.id}')`}">
+                            ${tab.pinned ? 'Unpin' : 'Pin'}
+                        </button>
+                        <button class="btn btn-danger" onclick="closeTab('${tab.id}')">Close</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Tab actions
+        async function activateTab(tabId) {
+            try {
+                await tabManager.activateTab(tabId);
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        async function duplicateTab(tabId) {
+            try {
+                await tabManager.duplicateTab(tabId);
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        function pinTab(tabId) {
+            try {
+                tabManager.pinTab(tabId);
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        function unpinTab(tabId) {
+            try {
+                tabManager.unpinTab(tabId);
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        async function closeTab(tabId) {
+            try {
+                await tabManager.closeTab(tabId);
+            } catch (error) {
+                logEvent('Error', error.message);
+            }
+        }
+
+        async function clearAllTabs() {
+            if (confirm('Are you sure you want to close all tabs?')) {
+                try {
+                    await tabManager.clearAllTabs();
+                    logEvent('Info', 'All tabs cleared');
+                } catch (error) {
+                    logEvent('Error', error.message);
+                }
+            }
+        }
+
+        function exportTabs() {
+            const data = tabManager.exportTabs();
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tabs-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            logEvent('Export', 'Tabs exported to JSON file');
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const stats = tabManager.getStatistics();
+            document.getElementById('statTotal').textContent = stats.total;
+            document.getElementById('statActive').textContent = stats.active;
+            document.getElementById('statPinned').textContent = stats.pinned;
+        }
+
+        // Log event
+        function logEvent(type, message) {
+            const log = document.getElementById('eventLog');
+            const time = new Date().toLocaleTimeString();
+            const item = document.createElement('div');
+            item.className = 'event-item';
+            item.innerHTML = `<span class="event-time">[${time}]</span><strong>${type}:</strong> ${escapeHtml(message)}`;
+            log.insertBefore(item, log.firstChild);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initial render
+        renderTabs();
+        updateStatistics();
+    </script>
+</body>
+</html>

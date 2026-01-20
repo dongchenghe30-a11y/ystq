@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Color Palette Generator & Extractor - Get Colors from Image Online, Schemes & Tools</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎨 Free Color Palette Generator & Extractor</h1>
+            <p class="subtitle">Get Colors from Image Online, Schemes & Tools</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="extract">Color Extractor</button>
+            <button class="tab-btn" data-tab="generator">Scheme Generator</button>
+            <button class="tab-btn" data-tab="preview">Previewer</button>
+            <button class="tab-btn" data-tab="contrast">Contrast Checker</button>
+        </div>
+
+        <div class="tab-content" id="extract">
+            <div class="panel">
+                <h2>Extract Colors from Image</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <span class="upload-icon">📁</span>
+                        <p>Drag & drop an image here or click to upload</p>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                </div>
+                
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <img id="uploadedImage" alt="Uploaded Image">
+                </div>
+
+                <div class="extract-controls">
+                    <button id="extractBtn" class="btn btn-primary" disabled>Extract Colors</button>
+                </div>
+
+                <div class="palette-results" id="paletteResults" style="display: none;">
+                    <h3>🎯 Dominant Color</h3>
+                    <div class="color-card dominant-color" id="dominantColor"></div>
+                    
+                    <h3>🎨 Top 10 Colors</h3>
+                    <div class="color-grid" id="colorGrid"></div>
+                    
+                    <div class="export-section">
+                        <h4>Export Palette</h4>
+                        <div class="export-buttons">
+                            <button class="btn btn-secondary" onclick="exportPalette('css')">Export CSS</button>
+                            <button class="btn btn-secondary" onclick="exportPalette('scss')">Export SCSS</button>
+                            <button class="btn btn-secondary" onclick="exportPalette('json')">Export JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="generator">
+            <div class="panel">
+                <h2>Color Scheme Generator</h2>
+                <div class="generator-controls">
+                    <div class="control-group">
+                        <label>Base Color</label>
+                        <input type="color" id="baseColor" value="#3498db">
+                        <span id="baseColorHex">#3498db</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Scheme Type</label>
+                        <select id="schemeType">
+                            <option value="complementary">Complementary</option>
+                            <option value="analogous">Analogous</option>
+                            <option value="triadic">Triadic</option>
+                            <option value="tetradic">Tetradic</option>
+                            <option value="monochromatic">Monochromatic</option>
+                            <option value="split-complementary">Split Complementary</option>
+                        </select>
+                    </div>
+                    
+                    <button id="generateBtn" class="btn btn-primary">Generate Scheme</button>
+                </div>
+
+                <div class="scheme-results" id="schemeResults">
+                    <h3>Generated Palette</h3>
+                    <div class="scheme-grid" id="schemeGrid"></div>
+                    
+                    <div class="scheme-info" id="schemeInfo"></div>
+                    
+                    <div class="export-section">
+                        <h4>Export Scheme</h4>
+                        <div class="export-buttons">
+                            <button class="btn btn-secondary" onclick="exportScheme('css')">Export CSS</button>
+                            <button class="btn btn-secondary" onclick="exportScheme('scss')">Export SCSS</button>
+                            <button class="btn btn-secondary" onclick="exportScheme('json')">Export JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="preview">
+            <div class="panel">
+                <h2>Preview Your Colors</h2>
+                
+                <div class="preview-controls">
+                    <div class="control-group">
+                        <label>Select Color</label>
+                        <input type="color" id="previewColor" value="#3498db">
+                        <span id="previewColorHex">#3498db</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Background Color</label>
+                        <input type="color" id="bgColor" value="#ffffff">
+                        <span id="bgColorHex">#ffffff</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Preview Type</label>
+                        <select id="previewType">
+                            <option value="web">Web Page Preview</option>
+                            <option value="mobile">Mobile App Preview</option>
+                            <option value="card">Card Component</option>
+                            <option value="button">Button Styles</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-wrapper web-preview" id="previewWrapper">
+                        <div class="preview-header">
+                            <div class="preview-nav">
+                                <div class="nav-dot"></div>
+                                <div class="nav-dot"></div>
+                                <div class="nav-dot"></div>
+                            </div>
+                        </div>
+                        <div class="preview-body">
+                            <h2 class="preview-title">Your Heading</h2>
+                            <p class="preview-text">This is a sample paragraph showing how your colors look in real content. Lorem ipsum dolor sit amet.</p>
+                            <button class="preview-button">Click Me</button>
+                            <div class="preview-card">
+                                <h3>Card Title</h3>
+                                <p>Card content goes here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="contrast">
+            <div class="panel">
+                <h2>WCAG Contrast Checker</h2>
+                <p class="info-text">Check if your color combinations meet accessibility standards</p>
+                
+                <div class="contrast-controls">
+                    <div class="control-group">
+                        <label>Foreground Color</label>
+                        <input type="color" id="fgColor" value="#ffffff">
+                        <span id="fgColorHex">#ffffff</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Background Color</label>
+                        <input type="color" id="bgColorContrast" value="#000000">
+                        <span id="bgColorContrastHex">#000000</span>
+                    </div>
+                    
+                    <button id="checkContrastBtn" class="btn btn-primary">Check Contrast</button>
+                </div>
+
+                <div class="contrast-results" id="contrastResults">
+                    <div class="contrast-preview" id="contrastPreview">
+                        <div class="contrast-sample">
+                            <span class="contrast-text">Normal Text</span>
+                        </div>
+                        <div class="contrast-sample large">
+                            <span class="contrast-text">Large Text (18pt+)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="contrast-metrics">
+                        <div class="metric-card">
+                            <h4>Contrast Ratio</h4>
+                            <span class="metric-value" id="contrastRatio">--</span>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h4>AA Normal</h4>
+                            <span class="metric-value" id="aaNormal">--</span>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h4>AA Large</h4>
+                            <span class="metric-value" id="aaLarge">--</span>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h4>AAA Normal</h4>
+                            <span class="metric-value" id="aaaNormal">--</span>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h4>AAA Large</h4>
+                            <span class="metric-value" id="aaaLarge">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="wcag-info">
+                        <h4>WCAG Standards</h4>
+                        <ul>
+                            <li><strong>AA Level:</strong> 4.5:1 for normal text, 3:1 for large text</li>
+                            <li><strong>AAA Level:</strong> 7:1 for normal text, 4.5:1 for large text</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Free Color Palette Generator & Extractor - Perfect for designers and developers</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

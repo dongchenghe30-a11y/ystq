@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator - Browser Tab Icons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2d3436;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .icon-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .icon-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .icon-preview svg {
+            max-width: 100%;
+            max-height: 200px;
+        }
+
+        .icon-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        .icon-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .color-picker-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-picker label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .color-picker input {
+            width: 80px;
+            height: 50px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .preview-section {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .preview-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-item h3 {
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+
+        .preview-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .preview-icon {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .preview-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .instructions {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            color: #495057;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎨 Browser Favicon Generator</h1>
+            <p class="subtitle">Professional Modern Favicons for Web Applications</p>
+        </header>
+
+        <div class="content">
+            <!-- Customization Section -->
+            <div class="section">
+                <h2>🎯 Customize Icon</h2>
+                <div class="color-picker-container">
+                    <div class="color-picker">
+                        <label>Primary Color</label>
+                        <input type="color" id="primaryColor" value="#667eea">
+                    </div>
+                    <div class="color-picker">
+                        <label>Secondary Color</label>
+                        <input type="color" id="secondaryColor" value="#764ba2">
+                    </div>
+                    <div class="color-picker">
+                        <label>Background Color</label>
+                        <input type="color" id="bgColor" value="#ffffff">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="updateIcons()">Update Icons</button>
+                    <button class="btn btn-secondary" onclick="resetColors()">Reset Colors</button>
+                </div>
+            </div>
+
+            <!-- Icon Designs -->
+            <div class="section">
+                <h2>🎨 Icon Designs</h2>
+                <div class="icon-grid">
+                    <!-- Design 1: Modern Browser -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon1" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="10" y="20" width="108" height="88" rx="8" fill="white" stroke="url(#grad1)" stroke-width="4"/>
+                                <rect x="10" y="20" width="108" height="20" rx="8" fill="url(#grad1)"/>
+                                <rect x="10" y="20" width="108" height="20" fill="url(#grad1)"/>
+                                <circle cx="30" cy="30" r="5" fill="#ff6b6b"/>
+                                <circle cx="45" cy="30" r="5" fill="#feca57"/>
+                                <circle cx="60" cy="30" r="5" fill="#48dbfb"/>
+                                <rect x="20" y="55" width="88" height="8" rx="4" fill="#e9ecef"/>
+                                <rect x="20" y="70" width="60" height="8" rx="4" fill="#e9ecef"/>
+                                <rect x="20" y="85" width="72" height="8" rx="4" fill="#e9ecef"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Modern Browser</div>
+                        <div class="icon-description">Clean browser window with tabs</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon1', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon1', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon1', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+
+                    <!-- Design 2: Abstract Tab -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon2" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="10" y="10" width="108" height="108" rx="12" fill="white"/>
+                                <path d="M10 35 L10 25 Q10 10 25 10 L45 10 L50 25 L10 35 Z" fill="url(#grad2)"/>
+                                <path d="M25 10 L50 25 L50 10 Z" fill="#5568d3"/>
+                                <circle cx="64" cy="64" r="20" fill="url(#grad2)" opacity="0.9"/>
+                                <path d="M56 64 L62 70 L74 58" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Abstract Tab</div>
+                        <div class="icon-description">Modern tab with checkmark</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon2', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon2', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon2', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+
+                    <!-- Design 3: Globe -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon3" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="64" cy="64" r="50" fill="url(#grad3)"/>
+                                <ellipse cx="64" cy="64" rx="50" ry="18" fill="none" stroke="white" stroke-width="4" opacity="0.3"/>
+                                <ellipse cx="64" cy="64" rx="18" ry="50" fill="none" stroke="white" stroke-width="4" opacity="0.3"/>
+                                <line x1="14" y1="64" x2="114" y2="64" stroke="white" stroke-width="4" opacity="0.3"/>
+                                <circle cx="64" cy="64" r="35" fill="none" stroke="white" stroke-width="3" opacity="0.2"/>
+                                <path d="M20 50 Q64 70 108 50" fill="none" stroke="white" stroke-width="3" opacity="0.2"/>
+                                <path d="M20 78 Q64 58 108 78" fill="none" stroke="white" stroke-width="3" opacity="0.2"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Globe</div>
+                        <div class="icon-description">Web browser globe design</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon3', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon3', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon3', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+
+                    <!-- Design 4: Layers -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon4" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="20" y="30" width="88" height="68" rx="6" fill="url(#grad2)" transform="rotate(-5 64 64)" opacity="0.6"/>
+                                <rect x="20" y="30" width="88" height="68" rx="6" fill="url(#grad1)" transform="rotate(0 64 64)"/>
+                                <rect x="20" y="30" width="88" height="68" rx="6" fill="url(#grad1)"/>
+                                <rect x="20" y="30" width="88" height="20" rx="6" fill="url(#grad1)"/>
+                                <rect x="20" y="30" width="88" height="20" fill="url(#grad1)"/>
+                                <circle cx="32" cy="40" r="4" fill="white" opacity="0.9"/>
+                                <circle cx="44" cy="40" r="4" fill="white" opacity="0.9"/>
+                                <circle cx="56" cy="40" r="4" fill="white" opacity="0.9"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Tab Layers</div>
+                        <div class="icon-description">Stacked tabs metaphor</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon4', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon4', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon4', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+
+                    <!-- Design 5: Minimal Arrow -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon5" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="10" y="10" width="108" height="108" rx="16" fill="white"/>
+                                <path d="M35 64 L55 44 L55 58 L93 58 L93 70 L55 70 L55 84 Z" fill="url(#grad5)"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Navigation Arrow</div>
+                        <div class="icon-description">Simple directional design</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon5', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon5', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon5', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+
+                    <!-- Design 6: Browser Window -->
+                    <div class="icon-card">
+                        <div class="icon-preview">
+                            <svg id="icon6" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="10" y="10" width="108" height="108" rx="12" fill="white"/>
+                                <rect x="10" y="10" width="108" height="25" rx="12" fill="url(#grad6)"/>
+                                <rect x="10" y="25" width="108" height="15" fill="url(#grad6)"/>
+                                <circle cx="28" cy="22" r="4" fill="white"/>
+                                <circle cx="42" cy="22" r="4" fill="white"/>
+                                <circle cx="56" cy="22" r="4" fill="white"/>
+                                <rect x="20" y="55" width="88" height="10" rx="5" fill="#e9ecef"/>
+                                <rect x="20" y="75" width="60" height="10" rx="5" fill="#e9ecef"/>
+                                <rect x="20" y="95" width="72" height="10" rx="5" fill="#e9ecef"/>
+                            </svg>
+                        </div>
+                        <div class="icon-title">Browser Window</div>
+                        <div class="icon-description">Classic browser interface</div>
+                        <div class="btn-group">
+                            <button class="btn" onclick="downloadIcon('icon6', 'png', 16)">16x16 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon6', 'png', 32)">32x32 PNG</button>
+                            <button class="btn" onclick="downloadIcon('icon6', 'ico', 32)">ICO</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="section">
+                <h2>👁️ Real Browser Preview</h2>
+                <div class="preview-section">
+                    <div class="preview-item">
+                        <h3>Browser Tab Preview</h3>
+                        <div class="preview-box">
+                            <div class="preview-icon">
+                                <svg id="previewIcon" width="16" height="16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="gradPreview" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect x="10" y="20" width="108" height="88" rx="8" fill="white" stroke="url(#gradPreview)" stroke-width="4"/>
+                                    <rect x="10" y="20" width="108" height="20" rx="8" fill="url(#gradPreview)"/>
+                                    <rect x="10" y="20" width="108" height="20" fill="url(#gradPreview)"/>
+                                    <circle cx="30" cy="30" r="5" fill="#ff6b6b"/>
+                                    <circle cx="45" cy="30" r="5" fill="#feca57"/>
+                                    <circle cx="60" cy="30" r="5" fill="#48dbfb"/>
+                                    <rect x="20" y="55" width="88" height="8" rx="4" fill="#e9ecef"/>
+                                    <rect x="20" y="70" width="60" height="8" rx="4" fill="#e9ecef"/>
+                                    <rect x="20" y="85" width="72" height="8" rx="4" fill="#e9ecef"/>
+                                </svg>
+                            </div>
+                            <div class="preview-label">16x16 (Tab)</div>
+                        </div>
+                    </div>
+                    <div class="preview-item">
+                        <h3>Bookmark Preview</h3>
+                        <div class="preview-box">
+                            <div class="preview-icon">
+                                <svg id="previewIcon32" width="32" height="32" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="gradPreview32" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect x="10" y="20" width="108" height="88" rx="8" fill="white" stroke="url(#gradPreview32)" stroke-width="4"/>
+                                    <rect x="10" y="20" width="108" height="20" rx="8" fill="url(#gradPreview32)"/>
+                                    <rect x="10" y="20" width="108" height="20" fill="url(#gradPreview32)"/>
+                                    <circle cx="30" cy="30" r="5" fill="#ff6b6b"/>
+                                    <circle cx="45" cy="30" r="5" fill="#feca57"/>
+                                    <circle cx="60" cy="30" r="5" fill="#48dbfb"/>
+                                    <rect x="20" y="55" width="88" height="8" rx="4" fill="#e9ecef"/>
+                                    <rect x="20" y="70" width="60" height="8" rx="4" fill="#e9ecef"/>
+                                    <rect x="20" y="85" width="72" height="8" rx="4" fill="#e9ecef"/>
+                                </svg>
+                            </div>
+                            <div class="preview-label">32x32 (Bookmark)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage Instructions -->
+            <div class="section">
+                <h2>📖 Usage Instructions</h2>
+                <div class="instructions">
+                    <h3>How to Use Favicons</h3>
+                    <ol>
+                        <li>Download your preferred icon design and size</li>
+                        <li>Save the file as <code>favicon.ico</code> in your website's root directory</li>
+                        <li>Add the following HTML code to your <code>&lt;head&gt;</code> section:</li>
+                    </ol>
+                    <div class="code-block">
+&lt;!-- Favicon --&gt;
+&lt;link rel="icon" type="image/x-icon" href="/favicon.ico"&gt;
+&lt;link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"&gt;
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"&gt;
+
+&lt;!-- Apple Touch Icon --&gt;
+&lt;link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"&gt;
+
+&lt;!-- PWA Manifest --&gt;
+&lt;link rel="manifest" href="/site.webmanifest"&gt;
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Info -->
+            <div class="section">
+                <h2>⚙️ Technical Specifications</h2>
+                <div class="icon-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="preview-item">
+                        <h3>PNG Format</h3>
+                        <ul style="list-style: inside; color: #495057; line-height: 1.8;">
+                            <li>Lossless compression</li>
+                            <li>Supports transparency</li>
+                            <li>Recommended for modern browsers</li>
+                            <li>Best quality at all sizes</li>
+                        </ul>
+                    </div>
+                    <div class="preview-item">
+                        <h3>ICO Format</h3>
+                        <ul style="list-style: inside; color: #495057; line-height: 1.8;">
+                            <li>Legacy browser support</li>
+                            <li>Can contain multiple sizes</li>
+                            <li>Required for IE</li>
+                            <li>Standard favicon format</li>
+                        </ul>
+                    </div>
+                    <div class="preview-item">
+                        <h3>Recommended Sizes</h3>
+                        <ul style="list-style: inside; color: #495057; line-height: 1.8;">
+                            <li>16x16: Browser tab</li>
+                            <li>32x32: Taskbar/Bookmarks</li>
+                            <li>96x96: Desktop shortcuts</li>
+                            <li>180x180: Apple touch icon</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update icons with custom colors
+        function updateIcons() {
+            const primary = document.getElementById('primaryColor').value;
+            const secondary = document.getElementById('secondaryColor').value;
+            const bg = document.getElementById('bgColor').value;
+
+            // Update all gradients
+            const gradients = document.querySelectorAll('stop');
+            gradients.forEach((stop, index) => {
+                if (stop.getAttribute('style').includes('#667eea')) {
+                    stop.style.stopColor = primary;
+                }
+                if (stop.getAttribute('style').includes('#764ba2')) {
+                    stop.style.stopColor = secondary;
+                }
+            });
+
+            // Update backgrounds
+            const backgrounds = document.querySelectorAll('rect[fill="white"]');
+            backgrounds.forEach(rect => {
+                if (rect.getAttribute('x') === '10' || rect.getAttribute('x') === '20') {
+                    rect.setAttribute('fill', bg);
+                }
+            });
+
+            // Update previews
+            updatePreview(primary, secondary, bg);
+        }
+
+        function updatePreview(primary, secondary, bg) {
+            const previewStops = document.querySelectorAll('#previewIcon stop, #previewIcon32 stop');
+            previewStops.forEach(stop => {
+                if (stop.style.stopColor === '#667eea') {
+                    stop.style.stopColor = primary;
+                }
+                if (stop.style.stopColor === '#764ba2') {
+                    stop.style.stopColor = secondary;
+                }
+            });
+        }
+
+        function resetColors() {
+            document.getElementById('primaryColor').value = '#667eea';
+            document.getElementById('secondaryColor').value = '#764ba2';
+            document.getElementById('bgColor').value = '#ffffff';
+            updateIcons();
+        }
+
+        // Download icon as PNG
+        function downloadIcon(iconId, format, size) {
+            const svg = document.getElementById(iconId);
+            const svgData = new XMLSerializer().serializeToString(svg);
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            const img = new Image();
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = function() {
+                ctx.clearRect(0, 0, size, size);
+                ctx.drawImage(img, 0, 0, size, size);
+                URL.revokeObjectURL(url);
+
+                if (format === 'png') {
+                    const pngUrl = canvas.toDataURL('image/png');
+                    downloadFile(pngUrl, `favicon-${size}x${size}.png`, 'image/png');
+                } else if (format === 'ico') {
+                    createICO(canvas, size);
+                }
+            };
+
+            img.src = url;
+        }
+
+        // Create ICO file
+        function createICO(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, size, size);
+            
+            // Create BMP header
+            const bmpHeader = new ArrayBuffer(40);
+            const bmpView = new DataView(bmpHeader);
+            
+            bmpView.setUint16(0, size, true);  // Width
+            bmpView.setUint16(2, size, true);  // Height
+            bmpView.setUint16(4, 1, true);     // Planes
+            bmpView.setUint16(6, 32, true);    // Bits per pixel
+            bmpView.setUint32(8, 0, true);     // Compression
+            bmpView.setUint32(12, size * size * 4, true);  // Image size
+            bmpView.setInt32(16, 2835, true);  // X pixels per meter
+            bmpView.setInt32(20, 2835, true);  // Y pixels per meter
+            bmpView.setUint32(24, 0, true);    // Colors used
+            bmpView.setUint32(28, 0, true);    // Important colors
+            
+            // Create ICO header
+            const icoHeader = new ArrayBuffer(22);
+            const icoView = new DataView(icoHeader);
+            
+            icoView.setUint16(0, 0, true);     // Reserved
+            icoView.setUint16(2, 1, true);     // Type (1 = ICO)
+            icoView.setUint16(4, 1, true);     // Number of images
+            icoView.setUint8(6, size > 256 ? 0 : size);  // Width
+            icoView.setUint8(7, size > 256 ? 0 : size);  // Height
+            icoView.setUint8(8, 0, true);     // Colors
+            icoView.setUint8(9, 0, true);     // Reserved
+            icoView.setUint16(10, 1, true);   // Color planes
+            icoView.setUint16(12, 32, true);  // Bits per pixel
+            icoView.setUint32(14, 40 + size * size * 4, true);  // Size of image data
+            icoView.setUint32(18, 22, true);  // Offset to image data
+            
+            // Combine headers and image data
+            const icoData = new Uint8Array(22 + 40 + size * size * 4);
+            icoData.set(new Uint8Array(icoHeader), 0);
+            icoData.set(new Uint8Array(bmpHeader), 22);
+            
+            // Convert RGBA to BGRA
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                const offset = 22 + 40 + i;
+                icoData[offset] = imageData.data[i + 2];     // B
+                icoData[offset + 1] = imageData.data[i + 1]; // G
+                icoData[offset + 2] = imageData.data[i];     // R
+                icoData[offset + 3] = imageData.data[i + 3]; // A
+            }
+            
+            const blob = new Blob([icoData], { type: 'image/x-icon' });
+            const url = URL.createObjectURL(blob);
+            downloadFile(url, 'favicon.ico', 'image/x-icon');
+            URL.revokeObjectURL(url);
+        }
+
+        // Download file
+        function downloadFile(url, filename, type) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Initialize color pickers
+        document.getElementById('primaryColor').addEventListener('change', updateIcons);
+        document.getElementById('secondaryColor').addEventListener('change', updateIcons);
+        document.getElementById('bgColor').addEventListener('change', updateIcons);
+    </script>
+</body>
+</html>
